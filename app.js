@@ -6,8 +6,16 @@ const path = require('path');
 const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-const leadersRouter = require('./routes/leaders');
+const accountsRouter = require('./routes/accountsRouter');
+const homeRouter = require('./routes/homeRouter');
+const caballerosRouter = require('./routes/caballerosRouter');
+const damasRouter = require('./routes/damasRouter');
+const jovenesRouter = require('./routes/jovenesRouter');
+const ninosRouter = require('./routes/ninosRouter');
+const aboutusRouter = require('./routes/aboutusRouter');
+const eventsRouter = require('./routes/eventsRouter');
+const calendarRouter = require('./routes/calendarRouter');
+const contactusRouter = require('./routes/contactusRouter');
 
 const mongoose = require('mongoose');
 const passport = require('passport');
@@ -40,8 +48,16 @@ app.use(passport.initialize());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/leader', leadersRouter);
+app.use('/accounts', accountsRouter);
+app.use('/home', homeRouter);
+app.use('/caballeros', caballerosRouter);
+app.use('/damas', damasRouter);
+app.use('/jovenes', jovenesRouter);
+app.use('/ninos', ninosRouter);
+app.use('/aboutus', aboutusRouter);
+app.use('/events', eventsRouter);
+app.use('/calendar', calendarRouter);
+app.use('/contactus', contactusRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
