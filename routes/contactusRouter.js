@@ -1,9 +1,28 @@
 const express = require('express');
-const router = express.Router();
+const contactusRouter = express.Router();
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+
+contactusRouter.route('/')
+.get((req, res) => {
+  console.log('req: ', req)
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/html');
+  res.end('respond with a resource');
+})
+.post((req, res) =>{
+  console.log('req: ', req)
+  res.statusCode = 403;
+  res.end('POST operation not supported for /contactus');
+})
+.put((req, res) =>{
+  console.log('req: ', req)
+  res.statusCode = 403;
+  res.end('PUT operation not supported for /contactus');
+})
+.delete((req, res) =>{
+  console.log('req: ', req)
+  res.statusCode = 403;
+  res.end('DELETE operation not supported for /contactus');
 });
 
-module.exports = router;
+module.exports = contactusRouter;

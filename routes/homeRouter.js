@@ -2,11 +2,12 @@ const express = require('express');
 
 const homeRouter = express.Router();
 
-homeRouter.get('/home', function(req, res, next) {
+homeRouter.route('/')
+.get((req, res) => {
   console.log('req: ', req)
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/html');
-  res.end('respond with a resource');
+  res.end('respond with a resource for home page');
 })
 .post((req, res) =>{
   console.log('req: ', req)

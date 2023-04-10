@@ -2,11 +2,12 @@ const express = require('express');
 
 const aboutusRouter = express.Router();
 
-aboutusRouter.get('/aboutus', function(req, res, next) {
+aboutusRouter.route('/')
+.get((req, res) => {
   console.log('req: ', req)
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/html');
-  res.end('respond with a resource');
+  res.end('respond with a resource for about us page');
 })
 .post((req, res) =>{
   console.log('req: ', req)

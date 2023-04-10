@@ -48,7 +48,6 @@ app.use(passport.initialize());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/accounts', accountsRouter);
 app.use('/home', homeRouter);
 app.use('/caballeros', caballerosRouter);
 app.use('/damas', damasRouter);
@@ -58,6 +57,7 @@ app.use('/aboutus', aboutusRouter);
 app.use('/events', eventsRouter);
 app.use('/calendar', calendarRouter);
 app.use('/contactus', contactusRouter);
+app.use('/accounts', accountsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

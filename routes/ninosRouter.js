@@ -2,11 +2,12 @@ const express = require('express');
 
 const ninosRouter = express.Router();
 
-ninosRouter.get('/ninos', function(req, res, next) {
+ninosRouter.route('/')
+.get((req, res) => {
   console.log('req: ', req)
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/html');
-  res.end('respond with a resource');
+  res.end('respond with a resource for niños page');
 })
 .post((req, res) =>{
   console.log('req: ', req)

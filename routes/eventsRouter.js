@@ -2,11 +2,12 @@ const express = require('express');
 
 const eventsRouter = express.Router();
 
-eventsRouter.get('/events', function(req, res, next) {
+eventsRouter.route('/')
+.get((req, res) => {
   console.log('req: ', req)
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/html');
-  res.end('respond with a resource');
+  res.end('respond with a resource for events page');
 })
 .post((req, res) =>{
   console.log('req: ', req)

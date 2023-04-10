@@ -2,11 +2,12 @@ const express = require('express');
 
 const damasRouter = express.Router();
 
-damasRouter.get('/damas', function(req, res, next) {
+damasRouter.route('/')
+.get((req, res) => {
   console.log('req: ', req)
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/html');
-  res.end('respond with a resource');
+  res.end('respond with a resource for damas page');
 })
 .post((req, res) =>{
   console.log('req: ', req)
