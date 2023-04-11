@@ -24,9 +24,9 @@ const visitorSchema = new Schema({
     },
     contactType: {
         type: String,
-        default: email
+        required: false
     },
-    feeback: {
+    feedback: {
         type: String,
         required: true
     }
