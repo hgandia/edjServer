@@ -69,11 +69,11 @@ contactusRouter.route('/visitors')
   })
   .post((req, res) =>{
     res.statusCode = 403;
-    res.end('POST operation is not supported on /contactus/visitors');
+    res.end(`POST operation is not supported on /contactus/visitors/${req.params.visitorId}/`);
   })
   .put((req, res) =>{
     res.statusCode = 403;
-    res.end('PUT operation is not supported on /contactus/visitors');
+    res.end(`PUT operation is not supported on /contactus/visitors/${req.params.visitorId}/`);
   })
   .delete((req, res, next) =>{
       Visitor.findByIdAndDelete(req.params.visitorId)
@@ -83,5 +83,6 @@ contactusRouter.route('/visitors')
           res.json(response);
       })
       .catch(err =>next(err))
-    });  
+    });
+
 module.exports = contactusRouter;
