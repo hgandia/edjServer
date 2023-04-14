@@ -2,11 +2,10 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
-//const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
-const accountsRouter = require('./routes/accountsRouter');
+const usersRouter = require('./routes/usersRouter');
 const homeRouter = require('./routes/homeRouter');
 const caballerosRouter = require('./routes/caballerosRouter');
 const damasRouter = require('./routes/damasRouter');
@@ -43,8 +42,9 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-//app.use(cookieParser());
+
 app.use(passport.initialize());
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
@@ -57,7 +57,7 @@ app.use('/aboutus', aboutusRouter);
 app.use('/events', eventsRouter);
 app.use('/calendar', calendarRouter);
 app.use('/contactus', contactusRouter);
-app.use('/accounts', accountsRouter);
+app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
