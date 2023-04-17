@@ -6,7 +6,8 @@ const authenticate = require('../authenticate');
 const usersRouter = express.Router();
 
 /* GET users listing. */
-usersRouter.get('/', authenticate.verifyUser, function(req, res, next) {
+usersRouter.route('/')
+.get(authenticate.verifyUser, function(req, res, next) {
   User.find()
   .then(users => {
     if(!users){
@@ -18,6 +19,16 @@ usersRouter.get('/', authenticate.verifyUser, function(req, res, next) {
       res.setHeader('Content-Type', 'application/json');
       res.json(users);
     }
+  })
+  .catch(err => next(err));
+})
+.delete(authenticate.verifyUser, (req, res, next) => {
+  User.deleteMany()
+  .then(response => {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.json(response);
+   
   })
   .catch(err => next(err));
 });
@@ -38,6 +49,9 @@ usersRouter.post('/signup', (req, res) => {
           if(req.body.lastname){
             user.lastname = req.body.lastname;
           }
+          console.log('req.body.firstname is', req.body.fistname);
+          console.log('req.body.lastname is', req.body.lastname);
+          console.log('req.body.admin is', req.body.admin);
           user.save(err => {
             if(err){
               res.statusCode = 500;
