@@ -8,30 +8,43 @@ const usersRouter = express.Router();
 /* GET users listing. */
 usersRouter.route('/')
 .get(authenticate.verifyUser, function(req, res, next) {
-  console.log(authenticate.verifyUser);
-  User.find()
-  .then(users => {
-    if(!users){
-      res.statusCode = 404;
-      res.setHeader('Content-Type', 'application/json');
-      res.end('There are no users!');
-    } else {
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'application/json');
-      res.json(users);
+  console.log('req.user: ', req.user);
+  console.log('req.user.admin is:', req.user.admin);
+  if(!req.user.admin){
+    res.statusCode = 401;
+    res.setHeader('Content-Type', 'application/json');
+    res.end('You are not authorized to access records.');
+  } else if (req.user.admin){
+      User.find()
+      .then(users => {
+        if(!users){
+          res.statusCode = 404;
+          res.setHeader('Content-Type', 'application/json');
+          res.end('There are no users!');
+        } else {
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'application/json');
+          res.json(users);
+        }
+      })
+      .catch(err => next(err));
     }
-  })
-  .catch(err => next(err));
 })
 .delete(authenticate.verifyUser, (req, res, next) => {
-  User.deleteMany()
-  .then(response => {
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'application/json');
-      res.json(response);
-   
-  })
-  .catch(err => next(err));
+  if(!req.user.admin){
+    res.statusCode = 401;
+    res.setHeader('Content-Type', 'application/json');
+    res.end('You are not authorized to delete records.');
+  } else if(req.user.admin){
+      User.deleteMany()
+      .then(response => {
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'application/json');
+          res.json(response);
+      
+      })
+      .catch(err => next(err));
+    }
 });
 
 usersRouter.post('/signup', (req, res) => {
