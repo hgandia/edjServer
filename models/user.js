@@ -14,7 +14,7 @@ const userSchema = new Schema({
     },
     admin: {
         type: Boolean,
-        dafault: false
+        default: false
     }
 });
 

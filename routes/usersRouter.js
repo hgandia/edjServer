@@ -8,6 +8,7 @@ const usersRouter = express.Router();
 /* GET users listing. */
 usersRouter.route('/')
 .get(authenticate.verifyUser, function(req, res, next) {
+  console.log(authenticate.verifyUser);
   User.find()
   .then(users => {
     if(!users){
@@ -49,9 +50,16 @@ usersRouter.post('/signup', (req, res) => {
           if(req.body.lastname){
             user.lastname = req.body.lastname;
           }
-          console.log('req.body.firstname is', req.body.fistname);
+          console.log('req.body.admin before: ', req.body.admin);
+          console.log('user.admin before is: ', user.admin);
+          if(req.body.admin){
+            user.admin = req.body.admin; 
+            console.log('The new user.admin is: ', user.admin);
+          }
+          console.log('req.body.firstname is', req.body.firstname);
           console.log('req.body.lastname is', req.body.lastname);
-          console.log('req.body.admin is', req.body.admin);
+          console.log('user.admin: ', user.admin);
+          
           user.save(err => {
             if(err){
               res.statusCode = 500;
@@ -72,6 +80,7 @@ usersRouter.post('/signup', (req, res) => {
 
 usersRouter.post('/login', passport.authenticate('local'), (req, res) => {
       const token = authenticate.getToken({ _id: req.user._id });
+      console.log('user.admin: ', req.user.admin);
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
       res.json({ success: true, token: token, status: 'You are succesfully logged in!' });
