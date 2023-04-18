@@ -7,14 +7,7 @@ const usersRouter = express.Router();
 
 /* GET users listing. */
 usersRouter.route('/')
-.get(authenticate.verifyUser, function(req, res, next) {
-  console.log('req.user: ', req.user);
-  console.log('req.user.admin is:', req.user.admin);
-  if(!req.user.admin){
-    res.statusCode = 401;
-    res.setHeader('Content-Type', 'application/json');
-    res.end('You are not authorized to access records.');
-  } else if (req.user.admin){
+.get(authenticate.verifyUser, authenticate.verifyAdmin, function(req, res, next) {
       User.find()
       .then(users => {
         if(!users){
@@ -28,14 +21,8 @@ usersRouter.route('/')
         }
       })
       .catch(err => next(err));
-    }
 })
-.delete(authenticate.verifyUser, (req, res, next) => {
-  if(!req.user.admin){
-    res.statusCode = 401;
-    res.setHeader('Content-Type', 'application/json');
-    res.end('You are not authorized to delete records.');
-  } else if(req.user.admin){
+.delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
       User.deleteMany()
       .then(response => {
           res.statusCode = 200;
@@ -44,7 +31,6 @@ usersRouter.route('/')
       
       })
       .catch(err => next(err));
-    }
 });
 
 usersRouter.post('/signup', (req, res) => {
@@ -63,16 +49,9 @@ usersRouter.post('/signup', (req, res) => {
           if(req.body.lastname){
             user.lastname = req.body.lastname;
           }
-          console.log('req.body.admin before: ', req.body.admin);
-          console.log('user.admin before is: ', user.admin);
           if(req.body.admin){
             user.admin = req.body.admin; 
-            console.log('The new user.admin is: ', user.admin);
-          }
-          console.log('req.body.firstname is', req.body.firstname);
-          console.log('req.body.lastname is', req.body.lastname);
-          console.log('user.admin: ', user.admin);
-          
+          }          
           user.save(err => {
             if(err){
               res.statusCode = 500;
@@ -93,7 +72,7 @@ usersRouter.post('/signup', (req, res) => {
 
 usersRouter.post('/login', passport.authenticate('local'), (req, res) => {
       const token = authenticate.getToken({ _id: req.user._id });
-      console.log('user.admin: ', req.user.admin);
+      console.log('req.user: ', req.user);
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
       res.json({ success: true, token: token, status: 'You are succesfully logged in!' });
