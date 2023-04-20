@@ -15,6 +15,7 @@ const aboutusRouter = require('./routes/aboutusRouter');
 const eventsRouter = require('./routes/eventsRouter');
 const calendarRouter = require('./routes/calendarRouter');
 const contactusRouter = require('./routes/contactusRouter');
+const uploadRouter = require('./routes/uploadRouter');
 
 const mongoose = require('mongoose');
 const passport = require('passport');
@@ -70,6 +71,7 @@ app.use('/aboutus', aboutusRouter);
 app.use('/events', eventsRouter);
 app.use('/calendar', calendarRouter);
 app.use('/contactus', contactusRouter);
+app.use('/upload', uploadRouter);
 
 
 // catch 404 and forward to error handler
