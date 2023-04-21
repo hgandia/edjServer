@@ -2,12 +2,14 @@ const express = require('express');
 const User = require('../models/user');
 const passport = require('passport');
 const authenticate = require('../authenticate');
+const cors = require('./cors');
 
 const usersRouter = express.Router();
 
 /* GET users listing. */
 usersRouter.route('/')
-.get(authenticate.verifyUser, authenticate.verifyAdmin, function(req, res, next) {
+.options(cors.corsWithOptions, (req, res) => res.sendStatus(200))
+.get(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, function(req, res, next) {
       User.find()
       .then(users => {
         if(!users){
@@ -22,7 +24,7 @@ usersRouter.route('/')
       })
       .catch(err => next(err));
 })
-.delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
       User.deleteMany()
       .then(response => {
           res.statusCode = 200;
@@ -33,7 +35,9 @@ usersRouter.route('/')
       .catch(err => next(err));
 });
 
-usersRouter.post('/signup', (req, res) => {
+usersRouter.route('/signup')
+.options(cors.corsWithOptions, (req, res) => res.statusCode(200))
+.post(cors.corsWithOptions, (req, res) => {
     User.register(
       new User({ username: req.body.username }),
       req.body.password,
@@ -70,7 +74,9 @@ usersRouter.post('/signup', (req, res) => {
     );
 });
 
-usersRouter.post('/login', passport.authenticate('local'), (req, res) => {
+usersRouter.route('/login')
+.options(cors.corsWithOptions, (req, res) => res.statusCode(200))
+.post(cors.corsWithOptions, passport.authenticate('local'), (req, res) => {
       const token = authenticate.getToken({ _id: req.user._id });
       console.log('req.user: ', req.user);
       res.statusCode = 200;
@@ -78,7 +84,9 @@ usersRouter.post('/login', passport.authenticate('local'), (req, res) => {
       res.json({ success: true, token: token, status: 'You are succesfully logged in!' });
 });
 
-usersRouter.get('/logout', (req, res, next) => {
+usersRouter.route('/logout')
+.options(cors.corsWithOptions, (req, res) => res.statusCode(200))
+.get(cors.corsWithOptions, (req, res, next) => {
     if(req.session){
       req.session.destroy();
       res.clearCookie('session-id');

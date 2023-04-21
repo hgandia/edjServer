@@ -1,16 +1,18 @@
 const express = require('express');
 const Visitor = require('../models/visitor');
-const contactusRouter = express.Router();
 const authenticate = require('../authenticate');
-const { verify } = require('jsonwebtoken');
+const cors = require('./cors');
+
+const contactusRouter = express.Router();
 
 contactusRouter.route('/')
-.get((req, res) => {
+.options(cors.corsWithOptions, (req, res) => res.statusCode(200))
+.get(cors.cors, (req, res) => {
   res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/html');
+  res.setHeader('Content-Type', 'application/json');
   res.end('respond with a resource for the contactus page');
 })
-.post((req, res, next) =>{
+.post(cors.corsWithOptions, (req, res, next) =>{
   Visitor.create(req.body)
   .then(visitor => {
     res.statusCode = 200;
@@ -19,17 +21,18 @@ contactusRouter.route('/')
   })
   .catch(err => next(err));
 })
-.put((req, res) =>{
+.put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res) =>{
   res.statusCode = 403;
   res.end('PUT operation not supported for /contactus');
 })
-.delete((req, res) =>{
+.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res) =>{
   res.statusCode = 403;
   res.end('DELETE operation not supported for /contactus');
 });
 
 contactusRouter.route('/visitors')
-.get(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+.options(cors.corsWithOptions, (req, res) => res.statusCode(200))
+.get(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
       Visitor.find()
       .then(visitors =>{
         res.statusCode = 200;
@@ -38,15 +41,15 @@ contactusRouter.route('/visitors')
       })
       .catch(err => next(err));
 })
-.post((req, res) =>{
+.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res) =>{
   res.statusCode = 403;
   res.end('POST operation is not supported on /contactus/visitors');
 })
-.put((req, res) =>{
+.put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res) =>{
   res.statusCode = 403;
   res.end('PUT operation is not supported on /contactus/visitors');
 })
-.delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) =>{
+.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) =>{
       Visitor.deleteMany()
       .then(response => {
           res.statusCode = 200;
@@ -57,7 +60,8 @@ contactusRouter.route('/visitors')
   });
 
   contactusRouter.route('/visitors/:visitorId')
-  .get(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+  .options(cors.corsWithOptions, (req, res) => res.statusCode(200))
+  .get(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
         Visitor.findById(req.params.visitorId)
         .then(visitor =>{
           res.statusCode = 200;
@@ -66,15 +70,15 @@ contactusRouter.route('/visitors')
         })
         .catch(err => next(err));
   })
-  .post((req, res) =>{
+  .post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res) =>{
     res.statusCode = 403;
     res.end(`POST operation is not supported on /contactus/visitors/${req.params.visitorId}/`);
   })
-  .put((req, res) =>{
+  .put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res) =>{
     res.statusCode = 403;
     res.end(`PUT operation is not supported on /contactus/visitors/${req.params.visitorId}/`);
   })
-  .delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) =>{
+  .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) =>{
         Visitor.findByIdAndDelete(req.params.visitorId)
         .then(response => {
             res.statusCode = 200;
