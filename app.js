@@ -22,7 +22,9 @@ const passport = require('passport');
 const config = require('./config');
 
 //Connecting to MongoDB Server via Mongoose
-const url = config.mongoUrl;
+//const url = config.mongoUrl; //This url was used to test MongoDB locally.
+const url = config.mongoConnectionString; //This url is used when accessing the MongoDB online.  The real database.
+
 const connect = mongoose.connect(url, {
     useCreateIndex: true,
     useFindAndModify: false,
