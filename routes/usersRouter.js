@@ -86,16 +86,21 @@ usersRouter.route('/login')
 
 usersRouter.route('/logout')
 .options(cors.corsWithOptions, (req, res) => res.statusCode(200))
-.get(cors.corsWithOptions, (req, res, next) => {
-    if(req.session){
-      req.session.destroy();
-      res.clearCookie('session-id');
-      res.redirect('/');
-    } else {
-      const err = new Error('You are not logged in!');
-      err.status = 401;
-      return next(err);
-}
+.get(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+    authenticate.getToken({ _id: req.user.id }, 0);
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({success: true, status: 'You have successfully logged out!'});
+
+//     if(req.session){
+//       req.session.destroy();
+//       res.clearCookie('session-id');
+//       res.redirect('/');
+//     } else {
+//       const err = new Error('You are not logged in!');
+//       err.status = 401;
+//       return next(err);
+// }
 });
 
 module.exports = usersRouter;

@@ -25,28 +25,32 @@ const config = require('./config');
 //const url = config.mongoUrl; //This url was used to test MongoDB locally.
 const url = config.mongoConnectionString; //This url is used when accessing the MongoDB online.  The real database.
 
-const connect = mongoose.connect(url, {
+const connect = async () => {
+   await mongoose.connect(url, {
     useCreateIndex: true,
     useFindAndModify: false,
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
+};
 
-connect.then(() => {
-    console.log('Connected to MongoDB Server Correctly.'), err => console.log(err);
-});
+connect().catch(err => functions.logger.log(err));
+
+// connect.then(() => {
+//     console.log('Connected to MongoDB Server Correctly.'), err => console.log(err);
+// });
 
 const app = express();
 
 //secure traffic only
-app.all('*', (req, res, next) => {
-    if(req.secure){
-      return next();
-    } else {
-        console.log(`Redirecting to: https://${req.hostname}:${app.get('secPort')}${req.url}`);
-        res.redirect(301, `https://${req.hostname}:${app.get('secPort')}${req.url}`);
-    }
-});
+// app.all('*', (req, res, next) => {
+//     if(req.secure){
+//       return next();
+//     } else {
+//         console.log(`Redirecting to: https://${req.hostname}:${app.get('secPort')}${req.url}`);
+//         res.redirect(301, `https://${req.hostname}:${app.get('secPort')}${req.url}`);
+//     }
+// });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -92,4 +96,5 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+//module.exports = app;
+exports.edjServer = app;
