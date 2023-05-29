@@ -13,6 +13,7 @@ contactusRouter.route('/')
   res.end('respond with a resource for the contactus page');
 })
 .post(cors.corsWithOptions, (req, res, next) =>{
+  console.log('The req.body in post method in contactus router is: ', req.body);
   Visitor.create(req.body)
   .then(visitor => {
     res.statusCode = 200;
