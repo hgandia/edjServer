@@ -115,7 +115,6 @@ usersRouter.post('/login', cors.corsWithOptions, (req, res, next) => {
               success: true,
               token: token,
               id: req.user._id,
-              favorites: req.user.favorites,
               status: 'You are successfully logged in!'
           });
       });
@@ -129,16 +128,21 @@ usersRouter.route('/logout')
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.json({success: true, status: 'You have successfully logged out!'});
+});
 
-//     if(req.session){
-//       req.session.destroy();
-//       res.clearCookie('session-id');
-//       res.redirect('/');
-//     } else {
-//       const err = new Error('You are not logged in!');
-//       err.status = 401;
-//       return next(err);
-// }
+usersRouter.get('/checkJWTtoken', cors.corsWithOptions, (req, res) => {
+  passport.authenticate('jwt', { session: false }, (err, user, info) => {
+      if (err) {
+          return next(err);
+      }
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      if (!user) {
+          return res.json({ status: 'JWT invalid!', success: false, err: info });
+      } else {
+          return res.json({ status: 'JWT valid!', success: true, user: user });
+      }
+  })(req, res);
 });
 
 module.exports = usersRouter;
