@@ -33,7 +33,6 @@ exports.jwtPassport = passport.use(
                     return done(null, user);
                 } else {
                     return done(null, false);
-                    //In this section I can create login to signup a new user/create a new account.
                 }
             });
         }
@@ -50,4 +49,4 @@ exports.verifyAdmin = (req, res, next) => {
         err.status = 403;
         return next(err);
     }
-}
+};
