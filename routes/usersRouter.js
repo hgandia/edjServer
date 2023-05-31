@@ -126,7 +126,7 @@ usersRouter.route('/login')
 usersRouter.route('/logout')
 .options(cors.corsWithOptions, (req, res) => res.statusCode(200))
 .get(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
-    authenticate.getToken({ _id: req.user.id }, 0);
+    authenticate.getToken({ _id: req.user._id }, 0);
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.json({success: true, status: 'You have successfully logged out!'});
