@@ -82,43 +82,45 @@ usersRouter.route('/signup')
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
       res.json({ success: true, token: token, status: 'You are succesfully logged in!' });
-});
-*/
-usersRouter.post('/login', cors.corsWithOptions, (req, res, next) => {
+});*/
+
+usersRouter.route('/login')
+.options(cors.corsWithOptions, (req, res) => res.statusCode(200))
+.post(cors.corsWithOptions, (req, res, next) => {
   passport.authenticate('local', (err, user) => {
-      if (err) {
-          return next(err);
-      }
-      if (!user) {
-          res.statusCode = 401;
-          res.setHeader('Content-Type', 'application/json');
-          return res.json({
-              success: false,
-              status: 'Login Unsuccessful!',
-              err: info
-          });
-      }
-      req.logIn(user, (err) => {
-          if (err) {
-              res.statusCode = 401;
-              res.setHeader('Content-Type', 'application/json');
-              return res.json({
-                  success: false,
-                  status: 'Login Unsuccessful!',
-                  err: 'Could not log in user!'
-              });
-          }
-          const token = authenticate.getToken({ _id: user._id });
-          res.statusCode = 200;
-          res.setHeader('Content-Type', 'application/json');
-          return res.json({
-              success: true,
-              token: token,
-              id: req.user._id,
-              status: 'You are successfully logged in!'
-          });
-      });
-  })(req, res, next);
+    if (err) {
+        return next(err);
+    }
+    if (!user) {
+        res.statusCode = 401;
+        res.setHeader('Content-Type', 'application/json');
+        return res.json({
+            success: false,
+            status: 'Login Unsuccessful!',
+            err: info
+        });
+    }
+    req.logIn(user, (err) => {
+        if (err) {
+            res.statusCode = 401;
+            res.setHeader('Content-Type', 'application/json');
+            return res.json({
+                success: false,
+                status: 'Login Unsuccessful!',
+                err: 'Could not log in user!'
+            });
+        }
+        const token = authenticate.getToken({ _id: user._id });
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        return res.json({
+            success: true,
+            token: token,
+            id: req.user._id,
+            status: 'You are successfully logged in!'
+        });
+    });
+})(req, res, next);
 });
 
 usersRouter.route('/logout')
