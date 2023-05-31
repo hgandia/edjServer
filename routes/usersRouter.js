@@ -132,7 +132,9 @@ usersRouter.route('/logout')
     res.json({success: true, status: 'You have successfully logged out!'});
 });
 
-usersRouter.get('/checkJWTtoken', cors.corsWithOptions, (req, res) => {
+usersRouter.route('/checkJWTtoken')
+.options(cors.corsWithOptions, (req, res) => res.statusCode(200))
+.get(cors.corsWithOptions, (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user, info) => {
       if (err) {
           return next(err);
