@@ -66,7 +66,6 @@ app.use(passport.initialize());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-
 app.use('/home', homeRouter);
 app.use('/caballeros', caballerosRouter);
 app.use('/damas', damasRouter);
