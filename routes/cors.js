@@ -3,6 +3,7 @@ const cors = require('cors');
 const whitelist = [
     'http://localhost:3000', 
     'https://localhost:3443', 
+    'https://estrelladejacob.org',
     'https://estrella-de-jacob.web.app',
     'https://estrelladejacob.org/home',
     'https://www.estrelladejacob.org/',
@@ -11,7 +12,6 @@ const whitelist = [
 
 const corsOptionsDelegate = (req, callback) => {
     let corsOptions;
-    console.log('req.header origin is: ', req.header('Origin'));
     if(whitelist.indexOf(req.header('Origin')) !== -1){
         corsOptions = { origin: true };
     } else {
